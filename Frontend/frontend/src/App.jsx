@@ -6,6 +6,7 @@ import axios from 'axios'
 function App() {
   
   const [notes, setNotes] = useState([])
+ 
 
   function fetchNotes(){
          axios.get('http://localhost:3000/api/notes')
@@ -17,6 +18,9 @@ function App() {
   useEffect(()=>{
       fetchNotes()
   },[])
+
+  
+  
 
   function submithandler(e){
     e.preventDefault()
@@ -42,6 +46,18 @@ function App() {
     })
     
   }
+
+  function handleUpdateNote(noteId){
+    const newDescription = prompt("enter new description")
+    axios.patch("http://localhost:3000/api/notes/"+noteId,
+    {description: newDescription}).then((res)=>{
+      console.log(res.data);
+      fetchNotes();
+      
+    })
+  }
+
+ 
   
 
 
@@ -49,9 +65,14 @@ function App() {
   return (
     <>
      <form className='note-create-form' onSubmit={submithandler}>
-      <input  name='title' type="text" placeholder='Enter title' />
-      <input  name='description'   type="text" placeholder='Enter description' />
-      <button>Create note</button>
+      <input  name='title' type="text" placeholder='Enter title'
+     
+      />
+      <input  name='description'   type="text" placeholder='Enter description' 
+  
+      
+      />
+      <button>create</button>
      </form>
 
 
@@ -61,6 +82,9 @@ function App() {
         <h1>{note.title}</h1>
         <p>{note.description}</p>
         <button onClick={()=>{deletehandler(note._id)}}>delete</button>
+       <button onClick={()=>{
+        handleUpdateNote(note._id)
+       }}>Update</button>
       </div>
      })}
      </div>
@@ -69,3 +93,4 @@ function App() {
 }
 
 export default App
+    
